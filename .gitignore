@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.eggs/
+.venv/
+venv/
+*.tar.gz
+
+# pocketledger state (created inside ledgers at runtime, never committed)
+.pocketledger/
+
+# Reports generated while testing
+report.html
+report.md
+
+# Editors / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
