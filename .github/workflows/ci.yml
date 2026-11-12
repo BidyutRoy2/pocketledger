@@ -24,9 +24,10 @@ jobs:
         run: python -m unittest discover -s tests -v
       - name: CLI smoke test
         run: |
-          pocketledger --ledger /tmp/smoke-ledger init --account Main --starter-rules
-          pocketledger --ledger /tmp/smoke-ledger import examples/bank-sample-a.csv --account Main
-          pocketledger --ledger /tmp/smoke-ledger budget --set Groceries 400 --month 2026-11
-          pocketledger --ledger /tmp/smoke-ledger report --month 2026-11
-          pocketledger --ledger /tmp/smoke-ledger recurring
-          pocketledger --ledger /tmp/smoke-ledger doctor
+          pocketledger --ledger "${{ runner.temp }}/smoke-ledger" init --account Main --starter-rules
+          pocketledger --ledger "${{ runner.temp }}/smoke-ledger" import examples/bank-sample-a.csv --account Main
+          pocketledger --ledger "${{ runner.temp }}/smoke-ledger" categorize --learn "Trader Joe's" Groceries
+          pocketledger --ledger "${{ runner.temp }}/smoke-ledger" budget --set Groceries 400 --month 2026-11
+          pocketledger --ledger "${{ runner.temp }}/smoke-ledger" report --month 2026-11
+          pocketledger --ledger "${{ runner.temp }}/smoke-ledger" recurring
+          pocketledger --ledger "${{ runner.temp }}/smoke-ledger" doctor
