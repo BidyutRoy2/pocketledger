@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install
+        run: python -m pip install -e .
+      - name: Tests
+        run: python -m unittest discover -s tests -v
+      - name: CLI smoke test
+        run: |
+          pocketledger --ledger /tmp/smoke-ledger init --account Main --starter-rules
+          pocketledger --ledger /tmp/smoke-ledger import examples/bank-sample-a.csv --account Main
+          pocketledger --ledger /tmp/smoke-ledger budget --set Groceries 400 --month 2026-11
+          pocketledger --ledger /tmp/smoke-ledger report --month 2026-11
+          pocketledger --ledger /tmp/smoke-ledger recurring
+          pocketledger --ledger /tmp/smoke-ledger doctor
