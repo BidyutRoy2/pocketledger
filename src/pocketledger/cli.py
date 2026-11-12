@@ -500,6 +500,15 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
+    # Force UTF-8 output: Windows consoles default to cp1252, which cannot
+    # print the characters this CLI uses (budget bar █/░, report em dash —,
+    # recurring →/≈). Without this the CLI crashes on Windows with
+    # UnicodeEncodeError and the CI Tests step fails there only.
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except (AttributeError, ValueError):
+            pass
     parser = build_parser()
     args = parser.parse_args(argv)
     return args.func(args)
